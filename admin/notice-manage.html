@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Management - Woori Miracle</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #333;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #aaa;
+            padding: 15px;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: white;
+            background: #444;
+            border-radius: 4px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 40px;
+            background: #f9f9f9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <h3 style="color: white; margin-bottom: 30px; padding-left: 15px;">Admin Panel</h3>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="product-manage.html">Product Management</a>
+            <a href="notice-manage.html" class="active">Notice Management</a>
+            <a href="quotation-manage.html">Quotation Management</a>
+            <hr style="border: none; border-top: 1px solid #555; margin: 20px 0;">
+            <a href="../index.html" style="color: #4CAF50;">🏠 메인 홈페이지로</a>
+            <a href="#" onclick="logout()" style="margin-top: 30px; color: #ff6b6b;">Logout</a>
+        </div>
+        <div class="content">
+            <div class="flex justify-between items-center" style="margin-bottom: 30px;">
+                <h1>Notice Management</h1>
+                <button class="btn btn-primary" onclick="openModal()">Add Notice</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="notice-list"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="notice-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;" id="modal-title">Add Notice</h2>
+            <form id="notice-form">
+                <input type="hidden" id="n-id">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="n-title" required>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="n-date" required>
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea id="n-content" rows="5" required></textarea>
+                </div>
+                <div class="flex gap-4" style="margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save</button>
+                    <button type="button" class="btn btn-outline" style="flex: 1;"
+                        onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        checkAuth();
+
+        const renderList = () => {
+            const list = document.getElementById('notice-list');
+            list.innerHTML = '';
+            adminNotices.getAll().forEach(n => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${n.id}</td>
+                    <td>${n.title}</td>
+                    <td>${n.date}</td>
+                    <td>
+                        <button onclick="editNotice(${n.id})" style="margin-right: 10px; cursor: pointer;">Edit</button>
+                        <button onclick="deleteNotice(${n.id})" style="color: red; cursor: pointer;">Delete</button>
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+        };
+
+        const openModal = () => {
+            document.getElementById('notice-form').reset();
+            document.getElementById('n-id').value = '';
+            document.getElementById('n-date').valueAsDate = new Date();
+            document.getElementById('modal-title').innerText = 'Add Notice';
+            document.getElementById('notice-modal').style.display = 'flex';
+        };
+
+        const closeModal = () => {
+            document.getElementById('notice-modal').style.display = 'none';
+        };
+
+        const editNotice = (id) => {
+            const n = adminNotices.getAll().find(x => x.id === id);
+            if (n) {
+                document.getElementById('n-id').value = n.id;
+                document.getElementById('n-title').value = n.title;
+                document.getElementById('n-date').value = n.date;
+                document.getElementById('n-content').value = n.content;
+                document.getElementById('modal-title').innerText = 'Edit Notice';
+                document.getElementById('notice-modal').style.display = 'flex';
+            }
+        };
+
+        const deleteNotice = (id) => {
+            if (confirm('Are you sure?')) {
+                adminNotices.delete(id);
+                renderList();
+            }
+        };
+
+        document.getElementById('notice-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('n-id').value;
+            const notice = {
+                id: id ? Number(id) : Date.now(),
+                title: document.getElementById('n-title').value,
+                date: document.getElementById('n-date').value,
+                content: document.getElementById('n-content').value
+            };
+
+            if (id) {
+                adminNotices.update(Number(id), notice);
+            } else {
+                adminNotices.add(notice);
+            }
+            closeModal();
+            renderList();
+        });
+
+        renderList();
+    </script>
+</body>
+
+</html>

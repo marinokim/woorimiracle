@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice - Woori Miracle</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header></header>
+
+    <main class="container" style="padding: 60px 24px;">
+        <h1 style="text-align: center; margin-bottom: 40px;">공지사항 (Notice)</h1>
+
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: var(--light-bg); border-bottom: 1px solid var(--border-color);">
+                        <th style="padding: 15px; text-align: center; width: 80px;">번호</th>
+                        <th style="padding: 15px; text-align: left;">제목</th>
+                        <th style="padding: 15px; text-align: center; width: 120px;">작성일</th>
+                        <th style="padding: 15px; text-align: center; width: 100px;">조회수</th>
+                    </tr>
+                </thead>
+                <tbody id="notice-list">
+                    <!-- Notices injected by JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <script src="js/data.js"></script>
+        <script>
+            const noticeList = document.getElementById('notice-list');
+            if (typeof notices !== 'undefined') {
+                // Sort by date desc
+                const sortedNotices = [...notices].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                sortedNotices.forEach((notice, index) => {
+                    const tr = document.createElement('tr');
+                    tr.style.borderBottom = '1px solid var(--border-color)';
+                    tr.innerHTML = `
+                        <td style="padding: 15px; text-align: center;">${sortedNotices.length - index}</td>
+                        <td style="padding: 15px;"><a href="#" onclick="alert('${notice.content}')" style="font-weight: 600;">${notice.title}</a></td>
+                        <td style="padding: 15px; text-align: center;">${notice.date}</td>
+                        <td style="padding: 15px; text-align: center;">${Math.floor(Math.random() * 500)}</td>
+                    `;
+                    noticeList.appendChild(tr);
+                });
+            }
+        </script>
+
+        <div class="flex justify-center" style="margin-top: 30px;">
+            <div class="flex gap-2">
+                <button class="btn btn-outline" style="padding: 8px 12px;">&lt;</button>
+                <button class="btn btn-primary" style="padding: 8px 12px;">1</button>
+                <button class="btn btn-outline" style="padding: 8px 12px;">&gt;</button>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script src="js/user.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

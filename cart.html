@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Woori Miracle</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header></header>
+
+    <main class="container" style="padding: 60px 20px;">
+        <h1 style="margin-bottom: 40px;">견적함 (Cart)</h1>
+
+        <div class="flex gap-8">
+            <!-- Cart Items -->
+            <div style="flex: 2;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <th style="text-align: left; padding: 15px;">상품정보</th>
+                            <th style="padding: 15px;">수량</th>
+                            <th style="padding: 15px;">가격</th>
+                            <th style="padding: 15px;">삭제</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items">
+                        <!-- Cart Items injected by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary -->
+            <div style="flex: 1;">
+                <div style="background: var(--light-bg); padding: 30px; border-radius: 8px;">
+                    <h3 style="margin-bottom: 20px;">견적 요약</h3>
+                    <div class="flex justify-between" style="margin-bottom: 15px;">
+                        <span>총 상품금액</span>
+                        <span id="cart-total">₩0</span>
+                    </div>
+                    <div class="flex justify-between" style="margin-bottom: 15px;">
+                        <span>배송비</span>
+                        <span>₩0</span>
+                    </div>
+                    <div style="border-top: 1px solid var(--border-color); margin: 20px 0;"></div>
+                    <div class="flex justify-between" style="margin-bottom: 30px; font-size: 1.2rem; font-weight: 700;">
+                        <span>총 견적금액</span>
+                        <span style="color: var(--primary-color);" id="cart-final-total">₩0</span>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; padding: 15px;" onclick="openQuotation()">견적서
+                        요청하기</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script src="js/data.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        const renderCartItems = () => {
+            const cartItems = cart.get();
+            const tbody = document.getElementById('cart-items');
+            const totalElement = document.getElementById('cart-total');
+            const finalTotalElement = document.getElementById('cart-final-total');
+
+            tbody.innerHTML = '';
+            let total = 0;
+
+            if (cartItems.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="padding: 30px; text-align: center;">장바구니가 비어있습니다.</td></tr>';
+            } else {
+                cartItems.forEach((item, index) => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    const tr = document.createElement('tr');
+                    tr.style.borderBottom = '1px solid var(--border-color)';
+                    tr.innerHTML = `
+                        <td style="padding: 15px; display: flex; align-items: center; gap: 15px;">
+                            <img src="${item.image}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" loading="lazy">
+                            <div>
+                                <div style="font-weight: 600;">${item.name}</div>
+                                <div style="font-size: 0.85rem; color: var(--light-text);">${item.category}</div>
+                            </div>
+                        </td>
+                        <td style="padding: 15px; text-align: center;">${item.quantity}</td>
+                        <td style="padding: 15px; text-align: center;">₩${item.price.toLocaleString()}</td>
+                        <td style="padding: 15px; text-align: center;">
+                            <button onclick="cart.remove(${index})" style="color: #ff6b6b; background: none; border: none; cursor: pointer;">삭제</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            totalElement.innerText = `₩${total.toLocaleString()}`;
+            finalTotalElement.innerText = `₩${total.toLocaleString()}`;
+        };
+
+        const openQuotation = () => {
+            const cartItems = cart.get();
+            if (cartItems.length === 0) {
+                alert('견적함이 비어있습니다.');
+                return;
+            }
+            window.open('quotation.html', '_blank');
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCartItems();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation Management - Woori Miracle</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #333;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #aaa;
+            padding: 15px;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: white;
+            background: #444;
+            border-radius: 4px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 40px;
+            background: #f9f9f9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-bar input,
+        .filter-bar select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <h3 style="color: white; margin-bottom: 30px; padding-left: 15px;">Admin Panel</h3>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="product-manage.html">Product Management</a>
+            <a href="notice-manage.html">Notice Management</a>
+            <a href="quotation-manage.html" class="active">Quotation Management</a>
+            <hr style="border: none; border-top: 1px solid #555; margin: 20px 0;">
+            <a href="../index.html" style="color: #4CAF50;">🏠 메인 홈페이지로</a>
+            <a href="#" onclick="logout()" style="margin-top: 30px; color: #ff6b6b;">Logout</a>
+        </div>
+        <div class="content">
+            <h1 style="margin-bottom: 30px;">Quotation Management</h1>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <input type="text" id="search-input" placeholder="업체명 또는 견적번호 검색..." style="flex: 1;">
+                <select id="status-filter" onchange="filterQuotations()">
+                    <option value="all">전체 상태</option>
+                    <option value="pending">대기</option>
+                    <option value="reviewing">검토중</option>
+                    <option value="quoted">견적완료</option>
+                    <option value="ordered">발주완료</option>
+                    <option value="cancelled">취소됨</option>
+                </select>
+                <button class="btn btn-outline" onclick="filterQuotations()">🔍 검색</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>견적번호</th>
+                        <th>업체명</th>
+                        <th>연락처</th>
+                        <th>요청일</th>
+                        <th>총액</th>
+                        <th>상태</th>
+                        <th>액션</th>
+                    </tr>
+                </thead>
+                <tbody id="quotation-list"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Detail & Edit Modal -->
+    <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center" style="margin-bottom: 30px;">
+                <h2 id="modal-quotation-id"></h2>
+                <button onclick="closeModal()"
+                    style="font-size: 1.5rem; border: none; background: none; cursor: pointer;">×</button>
+            </div>
+
+            <!-- Customer Info -->
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 15px;">고객 정보</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <strong>회사명:</strong> <span id="modal-company"></span>
+                    </div>
+                    <div>
+                        <strong>담당자:</strong> <span id="modal-name"></span>
+                    </div>
+                    <div>
+                        <strong>연락처:</strong> <span id="modal-phone"></span>
+                    </div>
+                    <div>
+                        <strong>이메일:</strong> <span id="modal-email"></span>
+                    </div>
+                    <div>
+                        <strong>요청일:</strong> <span id="modal-date"></span>
+                    </div>
+                    <div>
+                        <strong>총 금액:</strong> <strong id="modal-total" style="color: var(--primary-color);"></strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items -->
+            <h3 style="margin-bottom: 15px;">상품 목록</h3>
+            <div id="modal-items" style="margin-bottom: 20px; max-height: 300px; overflow-y: auto;">
+                <!-- Items will be injected -->
+            </div>
+
+            <!-- Notes -->
+            <div id="modal-customer-note" style="margin-bottom: 20px;">
+                <!-- Customer note will be injected -->
+            </div>
+
+            <!-- Admin Actions -->
+            <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 15px;">관리자 작업</h3>
+                <div class="form-group">
+                    <label>상태 변경</label>
+                    <select id="modal-status-select">
+                        <option value="pending">대기</option>
+                        <option value="reviewing">검토중</option>
+                        <option value="quoted">견적완료</option>
+                        <option value="ordered">발주완료</option>
+                        <option value="cancelled">취소됨</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>관리자 메모</label>
+                    <textarea id="modal-admin-note" rows="3" placeholder="고객에게 전달할 메시지를 입력하세요..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveChanges()">변경사항 저장</button>
+                <button class="btn" style="flex: 1; background: #f44336;" onclick="deleteQuotation()">견적 삭제</button>
+                <button class="btn btn-outline" onclick="closeModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script src="../js/quotation-manager.js"></script>
+    <script>
+        checkAuth();
+
+        let currentQuotation = null;
+
+        const renderList = (quotations = null) => {
+            const list = document.getElementById('quotation-list');
+            list.innerHTML = '';
+
+            const data = quotations || quotationManager.getAll();
+
+            if (data.length === 0) {
+                list.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #999;">견적 요청이 없습니다.</td></tr>';
+                return;
+            }
+
+            // 최신순 정렬
+            const sorted = data.sort((a, b) => b.createdAt - a.createdAt);
+
+            sorted.forEach(q => {
+                const tr = document.createElement('tr');
+                const statusColor = quotationManager.STATUS_COLORS[q.status];
+                const statusLabel = quotationManager.STATUS_LABELS[q.status];
+
+                tr.innerHTML = `
+                    <td><strong>${q.id}</strong></td>
+                    <td>${q.userCompany || q.userName}</td>
+                    <td>${q.userPhone || '-'}</td>
+                    <td>${q.date}</td>
+                    <td>₩${q.totalAmount.toLocaleString()}</td>
+                    <td><span class="status-badge" style="background: ${statusColor};">${statusLabel}</span></td>
+                    <td>
+                        <button onclick="viewDetail('${q.id}')" style="cursor: pointer; margin-right: 5px;">상세보기</button>
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+        };
+
+        const filterQuotations = () => {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+
+            let quotations = quotationManager.getAll();
+
+            // Status filter
+            if (statusFilter !== 'all') {
+                quotations = quotations.filter(q => q.status === statusFilter);
+            }
+
+            // Search filter
+            if (searchTerm) {
+                quotations = quotations.filter(q =>
+                    q.id.toLowerCase().includes(searchTerm) ||
+                    (q.userCompany && q.userCompany.toLowerCase().includes(searchTerm)) ||
+                    (q.userName && q.userName.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            renderList(quotations);
+        };
+
+        const viewDetail = (quotationId) => {
+            const q = quotationManager.getById(quotationId);
+            if (!q) return;
+
+            currentQuotation = q;
+
+            document.getElementById('modal-quotation-id').innerText = q.id;
+            document.getElementById('modal-company').innerText = q.userCompany || '-';
+            document.getElementById('modal-name').innerText = q.userName;
+            document.getElementById('modal-phone').innerText = q.userPhone || '-';
+            document.getElementById('modal-email').innerText = q.userEmail || '-';
+            document.getElementById('modal-date').innerText = q.date;
+            document.getElementById('modal-total').innerText = `₩${q.totalAmount.toLocaleString()}`;
+
+            // Items
+            const itemsContainer = document.getElementById('modal-items');
+            itemsContainer.innerHTML = '';
+            q.items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'item-row';
+                div.innerHTML = `
+                    <div>
+                        <strong>${index + 1}. ${item.name}</strong>
+                        <div style="font-size: 0.85rem; color: #888;">${item.category} × ${item.quantity}개 / 단가: ₩${item.price.toLocaleString()}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <strong>₩${(item.price * item.quantity).toLocaleString()}</strong>
+                    </div>
+                `;
+                itemsContainer.appendChild(div);
+            });
+
+            // Customer note
+            const customerNoteContainer = document.getElementById('modal-customer-note');
+            if (q.customerNote) {
+                customerNoteContainer.innerHTML = `
+                    <div style="background: #fff9c4; padding: 15px; border-radius: 8px;">
+                        <strong>💬 고객 메모:</strong><br>${q.customerNote}
+                    </div>
+                `;
+            } else {
+                customerNoteContainer.innerHTML = '';
+            }
+
+            // Set current status and admin note
+            document.getElementById('modal-status-select').value = q.status;
+            document.getElementById('modal-admin-note').value = q.adminNote || '';
+
+            document.getElementById('detail-modal').style.display = 'flex';
+        };
+
+        const closeModal = () => {
+            document.getElementById('detail-modal').style.display = 'none';
+            currentQuotation = null;
+        };
+
+        const saveChanges = () => {
+            if (!currentQuotation) return;
+
+            const newStatus = document.getElementById('modal-status-select').value;
+            const adminNote = document.getElementById('modal-admin-note').value;
+
+            quotationManager.update(currentQuotation.id, {
+                status: newStatus,
+                adminNote: adminNote
+            });
+
+            alert('변경사항이 저장되었습니다!');
+            closeModal();
+            renderList();
+        };
+
+        const deleteQuotation = () => {
+            if (!currentQuotation) return;
+
+            if (confirm(`정말로 이 견적(${currentQuotation.id})을 삭제하시겠습니까?`)) {
+                quotationManager.remove(currentQuotation.id);
+                alert('견적이 삭제되었습니다.');
+                closeModal();
+                renderList();
+            }
+        };
+
+        // Search on Enter key
+        document.getElementById('search-input').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                filterQuotations();
+            }
+        });
+
+        renderList();
+    </script>
+</body>
+
+</html>

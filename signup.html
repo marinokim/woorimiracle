@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Woori Miracle</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header></header>
+
+    <main class="container" style="padding: 100px 20px; max-width: 500px;">
+        <h1 style="text-align: center; margin-bottom: 40px;">회원가입</h1>
+        <form id="signup-form">
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">아이디</label>
+                <input type="text" id="username" required
+                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">이름</label>
+                <input type="text" id="name" required
+                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 30px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">비밀번호</label>
+                <input type="password" id="password" required
+                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <button type="submit" class="btn btn-primary"
+                style="width: 100%; padding: 15px; font-size: 1.1rem;">가입하기</button>
+        </form>
+        <div style="text-align: center; margin-top: 20px;">
+            이미 계정이 있으신가요? <a href="login.html" style="color: var(--primary-color); font-weight: 600;">로그인</a>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="js/user.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const n = document.getElementById('name').value;
+            const p = document.getElementById('password').value;
+
+            const result = userAuth.signup(u, p, n);
+            if (result.success) {
+                alert('회원가입이 완료되었습니다. 로그인해주세요.');
+                window.location.href = 'login.html';
+            } else {
+                alert(result.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Quotation History - Woori Miracle</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .quotation-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quotation-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .filter-tab {
+            padding: 8px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .filter-tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: -12px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <header></header>
+
+    <main class="container" style="padding: 60px 20px;">
+        <div class="flex justify-between items-center" style="margin-bottom: 40px;">
+            <h1>내 견적 히스토리</h1>
+            <a href="products.html" class="btn btn-primary">새 견적 만들기</a>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filterQuotations('all')">전체</button>
+            <button class="filter-tab" onclick="filterQuotations('pending')">대기</button>
+            <button class="filter-tab" onclick="filterQuotations('reviewing')">검토중</button>
+            <button class="filter-tab" onclick="filterQuotations('quoted')">견적완료</button>
+            <button class="filter-tab" onclick="filterQuotations('ordered')">발주완료</button>
+        </div>
+
+        <!-- Quotation List -->
+        <div id="quotation-list">
+            <!-- Items will be injected here -->
+        </div>
+
+        <div id="empty-state" style="display: none; text-align: center; padding: 60px 20px; color: #999;">
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">📋 저장된 견적이 없습니다.</p>
+            <a href="products.html" class="btn btn-primary">제품 둘러보기</a>
+        </div>
+    </main>
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center" style="margin-bottom: 30px;">
+                <h2 id="modal-quotation-id"></h2>
+                <button onclick="closeModal()"
+                    style="font-size: 1.5rem; border: none; background: none; cursor: pointer;">×</button>
+            </div>
+
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <div class="flex justify-between" style="margin-bottom: 10px;">
+                    <span>상태:</span>
+                    <span id="modal-status"></span>
+                </div>
+                <div class="flex justify-between" style="margin-bottom: 10px;">
+                    <span>요청일:</span>
+                    <span id="modal-date"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span>총 금액:</span>
+                    <strong id="modal-total" style="color: var(--primary-color); font-size: 1.2rem;"></strong>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 15px;">상품 목록</h3>
+            <div id="modal-items" style="margin-bottom: 20px;">
+                <!-- Items will be injected -->
+            </div>
+
+            <div id="modal-notes" style="margin-bottom: 20px;">
+                <!-- Notes will be injected -->
+            </div>
+
+            <div class="flex gap-4">
+                <button class="btn btn-primary" style="flex: 1;" onclick="restoreToCart()">장바구니로 복원</button>
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <footer></footer>
+    <script src="js/user.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/quotation-manager.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        let currentFilter = 'all';
+        let currentQuotation = null;
+
+        const renderQuotations = (filter = 'all') => {
+            const user = userAuth.getCurrentUser();
+            if (!user) {
+                // 비회원인 경우
+                document.getElementById('quotation-list').innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <p style="font-size: 1.2rem; margin-bottom: 20px;">로그인이 필요한 서비스입니다.</p>
+                        <a href="login.html" class="btn btn-primary">로그인</a>
+                    </div>
+                `;
+                return;
+            }
+
+            let quotations = quotationManager.getByUser(user.id);
+
+            // Filter
+            if (filter !== 'all') {
+                quotations = quotations.filter(q => q.status === filter);
+            }
+
+            const listContainer = document.getElementById('quotation-list');
+            const emptyState = document.getElementById('empty-state');
+
+            if (quotations.length === 0) {
+                listContainer.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            listContainer.innerHTML = '';
+
+            quotations.forEach(q => {
+                const card = document.createElement('div');
+                card.className = 'quotation-card';
+                card.onclick = () => showDetail(q.id);
+
+                const statusColor = quotationManager.STATUS_COLORS[q.status];
+                const statusLabel = quotationManager.STATUS_LABELS[q.status];
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center" style="margin-bottom: 10px;">
+                        <strong style="font-size: 1.1rem;">${q.id}</strong>
+                        <span class="status-badge" style="background: ${statusColor};">${statusLabel}</span>
+                    </div>
+                    <div style="color: #666; margin-bottom: 10px;">
+                        <div>요청일: ${q.date}</div>
+                        <div>제품 ${q.items.length}개 / 총 ₩${q.totalAmount.toLocaleString()}</div>
+                    </div>
+                    ${q.customerNote ? `<div style="color: #999; font-size: 0.9rem;">💬 ${q.customerNote}</div>` : ''}
+                `;
+
+                listContainer.appendChild(card);
+            });
+        };
+
+        const showDetail = (quotationId) => {
+            const q = quotationManager.getById(quotationId);
+            if (!q) return;
+
+            currentQuotation = q;
+
+            document.getElementById('modal-quotation-id').innerText = q.id;
+            document.getElementById('modal-date').innerText = q.date;
+            document.getElementById('modal-total').innerText = `₩${q.totalAmount.toLocaleString()}`;
+
+            const statusColor = quotationManager.STATUS_COLORS[q.status];
+            const statusLabel = quotationManager.STATUS_LABELS[q.status];
+            document.getElementById('modal-status').innerHTML = `<span class="status-badge" style="background: ${statusColor};">${statusLabel}</span>`;
+
+            // Items
+            const itemsContainer = document.getElementById('modal-items');
+            itemsContainer.innerHTML = '';
+            q.items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'item-row';
+                div.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong>
+                        <div style="font-size: 0.85rem; color: #888;">${item.category} × ${item.quantity}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        ₩${(item.price * item.quantity).toLocaleString()}
+                    </div>
+                `;
+                itemsContainer.appendChild(div);
+            });
+
+            // Notes
+            const notesContainer = document.getElementById('modal-notes');
+            notesContainer.innerHTML = '';
+
+            if (q.customerNote) {
+                notesContainer.innerHTML += `
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <strong>요청 메모:</strong><br>${q.customerNote}
+                    </div>
+                `;
+            }
+
+            if (q.adminNote) {
+                notesContainer.innerHTML += `
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px;">
+                        <strong>관리자 답변:</strong><br>${q.adminNote}
+                    </div>
+                `;
+            }
+
+            document.getElementById('detail-modal').style.display = 'flex';
+        };
+
+        const closeModal = () => {
+            document.getElementById('detail-modal').style.display = 'none';
+            currentQuotation = null;
+        };
+
+        const restoreToCart = () => {
+            if (!currentQuotation) return;
+
+            // 장바구니 초기화 확인
+            if (confirm('현재 장바구니를 이 견적 내용으로 교체하시겠습니까?')) {
+                cart.clear();
+                currentQuotation.items.forEach(item => {
+                    // cart.add는 (product, quantity)를 받으므로 수량을 분리해서 전달
+                    const { quantity, ...product } = item;
+                    cart.add(product, quantity);
+                });
+                alert('장바구니로 복원되었습니다!');
+                window.location.href = 'cart.html';
+            }
+        };
+
+        const filterQuotations = (status) => {
+            currentFilter = status;
+
+            // Update active tab
+            const tabs = document.querySelectorAll('.filter-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            renderQuotations(status);
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuotations('all');
+        });
+    </script>
+</body>
+
+</html>

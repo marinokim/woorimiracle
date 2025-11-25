@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Woori Miracle</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header></header>
+
+    <main class="container" style="padding: 100px 20px; max-width: 500px;">
+        <h1 style="text-align: center; margin-bottom: 40px;">로그인</h1>
+        <form id="login-form">
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">아이디</label>
+                <input type="text" id="username" required
+                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 30px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">비밀번호</label>
+                <input type="password" id="password" required
+                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <button type="submit" class="btn btn-primary"
+                style="width: 100%; padding: 15px; font-size: 1.1rem;">로그인</button>
+        </form>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="signup.html" style="color: var(--primary-color); font-weight: 600;">회원가입</a>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="js/user.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const result = userAuth.login(u, p);
+            if (result.success) {
+                alert('로그인되었습니다.');
+                window.location.href = 'index.html';
+            } else {
+                alert(result.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

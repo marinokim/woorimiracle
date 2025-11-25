@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - Woori Miracle</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header></header>
+
+    <main class="container" style="padding: 60px 20px;">
+        <div class="flex gap-8" style="margin-bottom: 60px;">
+            <!-- Image Gallery -->
+            <div style="flex: 1;">
+                <div
+                    style="height: 500px; background: #f0f0f0; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                    <img id="main-image" src="" alt="Product Image" style="max-height: 100%;">
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div style="flex: 1;">
+                <div id="product-category" style="color: var(--light-text); margin-bottom: 10px;">Category</div>
+                <h1 id="product-name" style="margin-bottom: 20px;">Product Name</h1>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 20px;"
+                    id="product-price">₩0</div>
+
+                <div style="background: var(--light-bg); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                    <div class="flex justify-between" style="margin-bottom: 10px;">
+                        <span style="font-weight: 600;">최소 주문 수량 (MOQ)</span>
+                        <span id="product-moq">0개</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span style="font-weight: 600;">배송비</span>
+                        <span>3,000원 (50,000원 이상 무료)</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 10px;">수량</label>
+                    <input type="number" value="10" min="10"
+                        style="width: 100px; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;">
+                </div>
+
+                <div class="flex gap-4">
+                    <button class="btn btn-primary" style="flex: 1; padding: 15px;" onclick="addToCart()">견적함
+                        담기</button>
+                    <button class="btn btn-outline" style="flex: 1; padding: 15px;">관심상품</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div style="border-bottom: 1px solid var(--border-color); margin-bottom: 40px;">
+            <button
+                style="padding: 15px 30px; border-bottom: 2px solid var(--primary-color); font-weight: 600; color: var(--primary-color); background: none; border-top: none; border-left: none; border-right: none;">상세정보</button>
+            <button
+                style="padding: 15px 30px; color: var(--light-text); background: none; border: none;">배송/교환/반품</button>
+        </div>
+
+        <div id="product-description" style="line-height: 1.8; color: var(--text-color);">
+            <!-- Description injected here -->
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // import { products } from './js/data.js';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+        let product = null;
+
+        if (typeof products !== 'undefined') {
+            product = products.find(p => p.id === productId) || products[0];
+        }
+
+        if (product) {
+            document.title = `${product.name} - Woori Miracle`;
+            document.getElementById('main-image').src = product.image;
+            document.getElementById('product-category').innerText = product.category;
+            document.getElementById('product-name').innerText = product.name;
+            document.getElementById('product-price').innerText = `₩${product.price.toLocaleString()}`;
+            document.getElementById('product-moq').innerText = `${product.moq}개`;
+            document.getElementById('product-description').innerText = product.description;
+
+            // Show detail image if available
+            if (product.detailImage) {
+                const detailContainer = document.createElement('div');
+                detailContainer.style.marginTop = '40px';
+                detailContainer.style.textAlign = 'center';
+                detailContainer.innerHTML = `<img src="${product.detailImage}" alt="Detail Info" style="max-width: 100%; box-shadow: var(--shadow-sm); margin: 0 auto;" loading="lazy">`;
+                document.querySelector('main').appendChild(detailContainer);
+            }
+        }
+
+        window.addToCart = () => {
+            if (!product) return;
+            const quantity = parseInt(document.querySelector('input[type="number"]').value);
+            cart.add(product, quantity);
+            alert('장바구니에 담겼습니다.');
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management - Woori Miracle</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #333;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #aaa;
+            padding: 15px;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: white;
+            background: #444;
+            border-radius: 4px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 40px;
+            background: #f9f9f9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <h3 style="color: white; margin-bottom: 30px; padding-left: 15px;">Admin Panel</h3>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="product-manage.html" class="active">Product Management</a>
+            <a href="notice-manage.html">Notice Management</a>
+            <a href="quotation-manage.html">Quotation Management</a>
+            <hr style="border: none; border-top: 1px solid #555; margin: 20px 0;">
+            <a href="../index.html" style="color: #4CAF50;">🏠 메인 홈페이지로</a>
+            <a href="#" onclick="logout()" style="margin-top: 30px; color: #ff6b6b;">Logout</a>
+        </div>
+        <div class="content">
+            <div class="flex justify-between items-center" style="margin-bottom: 30px;">
+                <h1>Product Management</h1>
+                <button class="btn btn-primary" onclick="openModal()">Add Product</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="product-list"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;" id="modal-title">Add Product</h2>
+            <form id="product-form">
+                <input type="hidden" id="p-id">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="p-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="p-category">
+                        <option value="Diary Case">Diary Case</option>
+                        <option value="Bumper Case">Bumper Case</option>
+                        <option value="Jelly Case">Jelly Case</option>
+                        <option value="Glass">Glass</option>
+                        <option value="Accessory">Accessory</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" id="p-price" required>
+                </div>
+                <div class="form-group">
+                    <label>MOQ</label>
+                    <input type="number" id="p-moq" value="10">
+                </div>
+                <div class="form-group">
+                    <label>Main Image
+                        <button type="button" onclick="openGithubSettings()"
+                            style="font-size: 0.8rem; padding: 2px 8px; margin-left: 10px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">⚙️
+                            GitHub 설정</button>
+                        <span id="github-status" style="font-size: 0.8rem; margin-left: 10px; color: #666;"></span>
+                    </label>
+                    <input type="file" id="p-image-file" accept="image/*">
+                    <input type="hidden" id="p-image">
+                    <img id="p-image-preview"
+                        style="max-width: 200px; margin-top: 10px; display: none; border-radius: 4px; border: 1px solid #ddd;">
+                </div>
+                <div class="form-group">
+                    <label>Detail Image</label>
+                    <input type="file" id="p-detail-image-file" accept="image/*">
+                    <input type="hidden" id="p-detail-image">
+                    <img id="p-detail-image-preview"
+                        style="max-width: 200px; margin-top: 10px; display: none; border-radius: 4px; border: 1px solid #ddd;">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="p-desc" rows="3"></textarea>
+                </div>
+                <div class="flex gap-4" style="margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save</button>
+                    <button type="button" class="btn btn-outline" style="flex: 1;"
+                        onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/github-manager.js"></script>
+    <script src="../js/admin.js"></script>
+    <script>
+        checkAuth();
+
+        const renderList = () => {
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            adminProducts.getAll().forEach(p => {
+                const tr = document.createElement('tr');
+                const imgSrc = (p.image.startsWith('data:') || p.image.startsWith('http')) ? p.image : `../${p.image}`;
+                tr.innerHTML = `
+                    <td><img src="${imgSrc}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+                    <td>${p.name}</td>
+                    <td>${p.category}</td>
+                    <td>₩${p.price.toLocaleString()}</td>
+                    <td>
+                        <button onclick="editProduct('${p.id}')" style="margin-right: 10px; cursor: pointer;">Edit</button>
+                        <button onclick="deleteProduct('${p.id}')" style="color: red; cursor: pointer;">Delete</button>
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+        };
+
+        const openModal = () => {
+            document.getElementById('product-form').reset();
+            document.getElementById('p-id').value = '';
+            document.getElementById('p-image').value = '';
+            document.getElementById('p-detail-image').value = '';
+            document.getElementById('p-image-preview').style.display = 'none';
+            document.getElementById('p-detail-image-preview').style.display = 'none';
+            document.getElementById('modal-title').innerText = 'Add Product';
+            document.getElementById('product-modal').style.display = 'flex';
+        };
+
+        const closeModal = () => {
+            document.getElementById('product-modal').style.display = 'none';
+        };
+
+        const editProduct = (id) => {
+            const p = adminProducts.getAll().find(x => x.id === id);
+            if (p) {
+                document.getElementById('p-id').value = p.id;
+                document.getElementById('p-name').value = p.name;
+                document.getElementById('p-category').value = p.category;
+                document.getElementById('p-price').value = p.price;
+                document.getElementById('p-moq').value = p.moq;
+                document.getElementById('p-image').value = p.image;
+                if (p.image) {
+                    document.getElementById('p-image-preview').src = p.image;
+                    document.getElementById('p-image-preview').style.display = 'block';
+                } else {
+                    document.getElementById('p-image-preview').style.display = 'none';
+                }
+
+                document.getElementById('p-detail-image').value = p.detailImage || '';
+                if (p.detailImage) {
+                    document.getElementById('p-detail-image-preview').src = p.detailImage;
+                    document.getElementById('p-detail-image-preview').style.display = 'block';
+                } else {
+                    document.getElementById('p-detail-image-preview').style.display = 'none';
+                }
+
+                document.getElementById('p-desc').value = p.description;
+                document.getElementById('modal-title').innerText = 'Edit Product';
+                document.getElementById('product-modal').style.display = 'flex';
+            }
+        };
+
+        // GitHub Configuration UI
+        const openGithubSettings = () => {
+            const token = localStorage.getItem('wm_github_token') || '';
+            const owner = localStorage.getItem('wm_github_owner') || 'marinokim';
+            const repo = localStorage.getItem('wm_github_repo') || 'woorimiracle-renewal';
+
+            const newToken = prompt('GitHub Personal Access Token을 입력하세요:\n(Repo 권한 필요)', token);
+            if (newToken === null) return; // Cancelled
+
+            const newOwner = prompt('GitHub Username (Owner):', owner);
+            const newRepo = prompt('Repository Name:', repo);
+
+            if (newToken && newOwner && newRepo) {
+                githubManager.saveConfig(newToken, newOwner, newRepo, 'main');
+                alert('GitHub 설정이 저장되었습니다!');
+                updateGithubStatus();
+            }
+        };
+
+        const updateGithubStatus = () => {
+            const statusEl = document.getElementById('github-status');
+            if (githubManager.isConfigured()) {
+                statusEl.innerHTML = '✅ GitHub 연동됨';
+                statusEl.style.color = 'green';
+            } else {
+                statusEl.innerHTML = '⚠️ GitHub 설정 필요';
+                statusEl.style.color = 'orange';
+            }
+        };
+
+        // File Upload Handlers - GitHub API
+        const handleFileUpload = (fileInputId, hiddenInputId, previewId) => {
+            document.getElementById(fileInputId).addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Preview immediately
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    document.getElementById(previewId).src = event.target.result;
+                    document.getElementById(previewId).style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+
+                if (!githubManager.isConfigured()) {
+                    if (confirm('GitHub 설정이 필요합니다. 설정하시겠습니까?')) {
+                        openGithubSettings();
+                    }
+                    if (!githubManager.isConfigured()) return;
+                }
+
+                try {
+                    // Show loading
+                    const btn = document.querySelector('button[type="submit"]');
+                    const originalText = btn.innerText;
+                    btn.disabled = true;
+                    btn.innerText = 'Uploading to GitHub...';
+
+                    const timestamp = Date.now();
+                    const extension = file.name.split('.').pop();
+                    const filename = `product_${timestamp}.${extension}`;
+                    const path = `assets/images/products/${filename}`;
+
+                    await githubManager.uploadFile(file, path, `Add product image: ${filename}`);
+
+                    // Set relative path for usage
+                    document.getElementById(hiddenInputId).value = path;
+
+                    alert(`✅ GitHub에 업로드 완료!\n경로: ${path}\n(반영까지 1-2분 소요될 수 있습니다)`);
+
+                } catch (error) {
+                    alert('업로드 실패: ' + error.message);
+                    console.error(error);
+                } finally {
+                    const btn = document.querySelector('button[type="submit"]');
+                    btn.disabled = false;
+                    btn.innerText = 'Save';
+                }
+            });
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateGithubStatus();
+        });
+
+        handleFileUpload('p-image-file', 'p-image', 'p-image-preview');
+        handleFileUpload('p-detail-image-file', 'p-detail-image', 'p-detail-image-preview');
+
+        const deleteProduct = (id) => {
+            if (confirm('Are you sure?')) {
+                adminProducts.delete(id);
+                renderList();
+            }
+        };
+
+        document.getElementById('product-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('p-id').value;
+            const product = {
+                id: id || 'p' + Date.now(),
+                name: document.getElementById('p-name').value,
+                category: document.getElementById('p-category').value,
+                price: Number(document.getElementById('p-price').value),
+                moq: Number(document.getElementById('p-moq').value),
+                image: document.getElementById('p-image').value,
+                detailImage: document.getElementById('p-detail-image').value,
+                description: document.getElementById('p-desc').value,
+                specs: { compatible: ['All Models'] } // Default specs
+            };
+
+            if (id) {
+                adminProducts.update(id, product);
+            } else {
+                adminProducts.add(product);
+            }
+            closeModal();
+            renderList();
+        });
+
+        renderList();
+    </script>
+</body>
+
+</html>

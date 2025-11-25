@@ -1,0 +1,14 @@
+{
+  "name": "woorimiracle-renewal",
+  "version": "1.0.0",
+  "description": "Woori Miracle Renewal Project",
+  "scripts": {
+    "deploy": "surge ./"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "surge": "^0.23.1"
+  }
+}

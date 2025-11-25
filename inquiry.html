@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Consultation - Woori Miracle</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header></header>
+
+    <main class="container" style="padding: 60px 20px; max-width: 800px;">
+        <h1 style="text-align: center; margin-bottom: 40px;">온라인 상담 (Online Consultation)</h1>
+        <p style="text-align: center; margin-bottom: 60px; color: var(--light-text);">
+            궁금하신 점이나 견적 문의를 남겨주시면 신속하게 답변 드리겠습니다.
+        </p>
+
+        <form id="inquiry-form"
+            style="background: white; padding: 40px; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+
+            <!-- Name -->
+            <div style="margin-bottom: 20px;">
+                <label for="name" style="display: block; font-weight: 600; margin-bottom: 8px;">성명 <span
+                        style="color: red;">*</span></label>
+                <input type="text" id="name" required
+                    style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px;">
+            </div>
+
+            <!-- Phone -->
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">전화번호 <span
+                        style="color: red;">*</span></label>
+                <div class="flex gap-4">
+                    <input type="text"
+                        style="flex: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px;"
+                        placeholder="010">
+                    <input type="text"
+                        style="flex: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px;">
+                    <input type="text"
+                        style="flex: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px;">
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div style="margin-bottom: 20px;">
+                <label for="subject" style="display: block; font-weight: 600; margin-bottom: 8px;">제목 <span
+                        style="color: red;">*</span></label>
+                <input type="text" id="subject" required
+                    style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px;">
+            </div>
+
+            <!-- Description -->
+            <div style="margin-bottom: 20px;">
+                <label for="message" style="display: block; font-weight: 600; margin-bottom: 8px;">설명 (문의내용) <span
+                        style="color: red;">*</span></label>
+                <textarea id="message" required rows="6"
+                    style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px; resize: vertical;"></textarea>
+            </div>
+
+            <!-- File Attachment -->
+            <div style="margin-bottom: 30px;">
+                <label for="file" style="display: block; font-weight: 600; margin-bottom: 8px;">파일첨부</label>
+                <input type="file" id="file"
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--light-bg);">
+            </div>
+
+            <!-- Privacy Agreement -->
+            <div style="margin-bottom: 30px; padding: 20px; background: var(--light-bg); border-radius: 4px;">
+                <div
+                    style="height: 100px; overflow-y: auto; font-size: 0.9rem; color: var(--light-text); margin-bottom: 10px; padding-right: 10px; border: 1px solid var(--border-color); background: white; padding: 10px;">
+                    [개인정보 수집 및 이용목적]<br>
+                    1. 수집하는 개인정보 항목: 성명, 전화번호, 이메일 등<br>
+                    2. 개인정보의 수집 및 이용목적: 상담 및 견적 문의에 대한 답변<br>
+                    3. 개인정보의 보유 및 이용기간: 목적 달성 시 즉시 파기<br>
+                    (자세한 내용은 개인정보처리방침을 확인해주세요.)
+                </div>
+                <label class="flex items-center gap-4" style="cursor: pointer;">
+                    <input type="checkbox" required style="width: 18px; height: 18px;">
+                    <span style="font-weight: 500;">개인정보 수집 및 이용목적에 동의합니다.</span>
+                </label>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex gap-4 justify-center">
+                <button type="submit" class="btn btn-primary" style="width: 150px;">작성 (Submit)</button>
+                <button type="reset" class="btn btn-outline" style="width: 150px;">취소 (Reset)</button>
+            </div>
+
+        </form>
+    </main>
+
+    <footer></footer>
+
+    <script src="js/user.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('inquiry-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('상담 신청이 접수되었습니다.\n빠른 시일 내에 연락드리겠습니다.');
+            e.target.reset();
+        });
+    </script>
+</body>
+
+</html>

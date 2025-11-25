@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Woori Miracle</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header></header>
+
+    <main class="container" style="padding: 60px 24px; display: flex; gap: 60px;">
+        <!-- Sidebar -->
+        <aside style="width: 220px; flex-shrink: 0;">
+            <h3
+                style="margin-bottom: 24px; font-size: 1.2rem; padding-bottom: 15px; border-bottom: 2px solid var(--primary-color);">
+                Categories</h3>
+            <ul id="category-list">
+                <!-- Categories injected by JS -->
+            </ul>
+        </aside>
+
+        <!-- Product Grid -->
+        <section style="flex: 1;">
+            <div class="flex justify-between items-center" style="margin-bottom: 40px;">
+                <h2 id="category-title" style="margin: 0;">All Products</h2>
+                <select
+                    style="padding: 10px 16px; border-radius: 6px; border: 1px solid var(--border-color); background: white; cursor: pointer;">
+                    <option>신상품순</option>
+                    <option>낮은가격순</option>
+                    <option>높은가격순</option>
+                </select>
+            </div>
+            <div id="product-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px;">
+                <!-- Products injected by JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer></footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // import { products, categories } from './js/data.js';
+
+        // Render Categories
+        const categoryList = document.getElementById('category-list');
+        if (typeof categories !== 'undefined') {
+            categories.forEach(cat => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '8px';
+                li.innerHTML = `<a href="#" class="category-link" data-id="${cat.id}" style="display: block; padding: 10px 12px; border-radius: 6px; transition: all 0.2s; ${cat.id === 'all' ? 'background: var(--light-bg); font-weight: 600; color: var(--primary-color);' : 'color: var(--light-text);'}">${cat.name}</a>`;
+                categoryList.appendChild(li);
+            });
+        }
+
+        // Render Products
+        const productGrid = document.getElementById('product-grid');
+        const renderProducts = (filterId = 'all') => {
+            productGrid.innerHTML = '';
+            if (typeof products === 'undefined') return;
+
+            const filtered = filterId === 'all'
+                ? products
+                : products.filter(p => p.category.toLowerCase().includes(filterId) || (filterId === 'diary' && p.category.includes('Diary')));
+
+            filtered.forEach(product => {
+                const card = document.createElement('a');
+                card.href = `product-detail.html?id=${product.id}`;
+                card.className = 'product-card';
+                card.style.display = 'block';
+                card.innerHTML = `
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" loading="lazy">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-price">₩${product.price.toLocaleString()}</div>
+                        <div class="b2b-badge">MOQ: ${product.moq}</div>
+                    </div>
+                `;
+                productGrid.appendChild(card);
+            });
+        };
+
+        renderProducts();
+
+        // Category Click Handler
+        categoryList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('category-link')) {
+                e.preventDefault();
+                // Reset styles
+                document.querySelectorAll('.category-link').forEach(l => {
+                    l.style.background = 'transparent';
+                    l.style.fontWeight = '400';
+                    l.style.color = 'var(--light-text)';
+                });
+                // Set active
+                e.target.style.background = 'var(--light-bg)';
+                e.target.style.fontWeight = '600';
+                e.target.style.color = 'var(--primary-color)';
+
+                const catId = e.target.dataset.id;
+                document.getElementById('category-title').innerText = e.target.innerText;
+                renderProducts(catId);
+            }
+        });
+    </script>
+</body>
+
+</html>

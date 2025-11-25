@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Woori Miracle</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #333;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #aaa;
+            padding: 15px;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: white;
+            background: #444;
+            border-radius: 4px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 40px;
+            background: #f9f9f9;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <h3 style="color: white; margin-bottom: 30px; padding-left: 15px;">Admin Panel</h3>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="product-manage.html">Product Management</a>
+            <a href="notice-manage.html">Notice Management</a>
+            <a href="quotation-manage.html">Quotation Management</a>
+            <hr style="border: none; border-top: 1px solid #555; margin: 20px 0;">
+            <a href="../index.html" style="color: #4CAF50;">🏠 메인 홈페이지로</a>
+            <a href="#" onclick="logout()" style="margin-top: 30px; color: #ff6b6b;">Logout</a>
+        </div>
+        <div class="content">
+            <h1 style="margin-bottom: 30px;">Dashboard</h1>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div class="card">
+                    <h3>Total Products</h3>
+                    <p style="font-size: 2rem; font-weight: 700; color: var(--primary-color);" id="total-products">0</p>
+                </div>
+                <div class="card">
+                    <h3>Total Notices</h3>
+                    <p style="font-size: 2rem; font-weight: 700; color: var(--primary-color);" id="total-notices">0</p>
+                </div>
+                <div class="card">
+                    <h3>Total Quotations</h3>
+                    <p style="font-size: 2rem; font-weight: 700; color: var(--primary-color);" id="total-quotations">0
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>Pending Quotations</h3>
+                    <p style="font-size: 2rem; font-weight: 700; color: #FFA726;" id="pending-quotations">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+    <script src="../js/quotation-manager.js"></script>
+    <script>
+        checkAuth();
+        document.getElementById('total-products').innerText = adminProducts.getAll().length;
+        document.getElementById('total-notices').innerText = adminNotices.getAll().length;
+
+        // Quotation stats
+        const quotationStats = quotationManager.getStats();
+        document.getElementById('total-quotations').innerText = quotationStats.total;
+        document.getElementById('pending-quotations').innerText = quotationStats.pending;
+    </script>
+</body>
+
+</html>
