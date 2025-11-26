@@ -37,8 +37,14 @@ const cart = {
 
 // Helper to update header badge
 const updateCartCount = () => {
+    const count = cart.getCount();
     const countElement = document.getElementById('cart-count');
+    const countElementDesktop = document.querySelector('.cart-count-desktop');
+
     if (countElement) {
-        countElement.innerText = cart.getCount();
+        countElement.innerText = count;
+    }
+    if (countElementDesktop) {
+        countElementDesktop.innerText = count;
     }
 };

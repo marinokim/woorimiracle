@@ -18,20 +18,20 @@ const renderHeader = () => {
     const welcomeMsg = user ? `<span style="margin-right: 10px; font-weight: 600; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block;">${user.name}님 환영합니다!</span>` : '';
 
     header.innerHTML = `
-        <div class="container" style="height: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
-            <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; justify-self: start;">
+        <div class="container" style="height: 100%; display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px;">
                 <img src="assets/images/logo/logo.gif" alt="Woori Miracle" style="height: 32px;" loading="lazy">
             </a>
             
-            <button class="mobile-menu-btn" onclick="toggleMenu()" style="grid-column: 3; justify-self: end;">
+            <button class="mobile-menu-btn" onclick="toggleMenu()">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
 
-            <div class="nav-wrapper" id="nav-wrapper" style="align-items: center; justify-self: center;">
-                <nav style="display: flex; align-items: center;">
-                    <ul class="flex gap-8 mobile-nav-list" style="align-items: center; margin: 0;">
+            <div class="nav-wrapper" id="nav-wrapper">
+                <nav>
+                    <ul class="flex gap-8 mobile-nav-list">
                         <li><a href="index.html" class="nav-link">HOME</a></li>
                         <li><a href="company.html" class="nav-link">회사소개</a></li>
                         <li><a href="products.html" class="nav-link">제품소개</a></li>
@@ -40,13 +40,22 @@ const renderHeader = () => {
                         ${user ? '<li><a href="quotation-history.html" class="nav-link" style="color: var(--primary-color);">📋 내 견적</a></li>' : ''}
                     </ul>
                 </nav>
+                
+                <div class="mobile-auth-actions">
+                    ${welcomeMsg}
+                    <a href="cart.html" style="position: relative; padding: 8px; display: inline-block;">
+                        <span style="font-size: 1.2rem;">🛒</span>
+                        <span id="cart-count" style="position: absolute; top: -5px; right: -5px; background: var(--primary-color); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px;">0</span>
+                    </a>
+                    ${authLink}
+                </div>
             </div>
             
-            <div class="flex gap-4 items-center mobile-auth-actions" style="justify-self: end;">
+            <div class="desktop-auth-actions" style="display: flex; gap: 1rem; align-items: center;">
                 ${welcomeMsg}
                 <a href="cart.html" style="position: relative; padding: 8px;">
                     <span style="font-size: 1.2rem;">🛒</span>
-                    <span id="cart-count" style="position: absolute; top: -5px; right: -5px; background: var(--primary-color); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px;">0</span>
+                    <span class="cart-count-desktop" style="position: absolute; top: -5px; right: -5px; background: var(--primary-color); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px;">0</span>
                 </a>
                 ${authLink}
             </div>
