@@ -373,5 +373,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764151095953",
+        "name": "나비 베이직 다이어리",
+        "category": "Diary Case",
+        "price": 18000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764151080111.jpg",
+        "detailImage": "assets/images/product/detail_1764151089154.jpeg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
