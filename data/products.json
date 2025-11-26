@@ -208,5 +208,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764150524373",
+        "name": "카메오 다이어리",
+        "category": "Diary Case",
+        "price": 12000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764150511921.jpg",
+        "detailImage": "assets/images/product/detail_1764150519810.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
