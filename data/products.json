@@ -43,5 +43,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764149887360",
+        "name": "(Z-FOLD)Z메오 다이어리",
+        "category": "Diary Case",
+        "price": 10000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764149870107.jpg",
+        "detailImage": "assets/images/product/detail_1764149882653.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
