@@ -121,15 +121,29 @@ var categories = [
 // Load products from localStorage or defaults
 var products = JSON.parse(localStorage.getItem('wm_products')) || defaultProducts;
 
-// Migrate old image paths (assets/images/) to new folder (assets/images/product/)
+// Migrate old image paths to new folder (assets/images/product/)
 const migratePaths = (list) => {
     return list.map(p => {
-        if (p.image && p.image.startsWith('assets/images/') && !p.image.startsWith('assets/images/product/')) {
+        // Handle old format: assets/images/product_*.jpg -> assets/images/product/product_*.jpg
+        if (p.image && p.image.startsWith('assets/images/product_')) {
             p.image = p.image.replace('assets/images/', 'assets/images/product/');
         }
-        if (p.detailImage && p.detailImage.startsWith('assets/images/') && !p.detailImage.startsWith('assets/images/product/')) {
+        if (p.image && p.image.startsWith('assets/images/detail_')) {
+            p.image = p.image.replace('assets/images/', 'assets/images/product/');
+        }
+        // Handle old format: assets/images/product01_*.jpg -> assets/images/product/product01_*.jpg
+        if (p.image && p.image.match(/^assets\/images\/product\d+_/)) {
+            p.image = p.image.replace('assets/images/', 'assets/images/product/');
+        }
+
+        // Same for detailImage
+        if (p.detailImage && p.detailImage.startsWith('assets/images/detail_')) {
             p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/product/');
         }
+        if (p.detailImage && p.detailImage.match(/^assets\/images\/detail\d+_/)) {
+            p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/product/');
+        }
+
         return p;
     });
 };
