@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>요청하신 페이지를 찾을 수 없습니다.</title>
+<link href="http://img.fmcity.com/images/reseller/mypage/common20.css" rel="stylesheet" type="text/css" media="screen" >
+<link href="http://img.fmcity.com/images/reseller/mypage/seller.css" rel="stylesheet" type="text/css" media="screen" />
+
+</head>
+
+<body class="bgn">
+  <div id="wrap">
+    <div id="wrap_error">
+      <div class="search_result_none">
+      	<div class="warnning">
+      	<div class="page_error">
+      		<h3><img src="http://img.fmcity.com/images/reseller/mypage/error_txt01.gif" alt="Error!" /></h3>
+      		<p class="txt01">요청하신 페이지를 찾을 수 없습니다.</p>
+      		<p class="txt02"><img src="http://img.fmcity.com/images/reseller/mypage/error_txt03.png" alt="서비스 이용에 불편을 드려서 죄송합니다. 관련 문의사항을 고객센터에 알려주시면 친절하게 안내해 드리겠습니다. 감사합니다." class="png24" /></p>
+      	</div>
+      	</div>
+      </div> <!-- search_result_wrap ED -->
+    </div> <!-- wrap ED -->
+  </div>
+</body>
+</html>
