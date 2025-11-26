@@ -328,5 +328,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764150868956",
+        "name": "사피아노C 히든 링트랩 카드 다이어리",
+        "category": "Diary Case",
+        "price": 18000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764150853277.jpg",
+        "detailImage": "assets/images/product/detail_1764150864034.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
