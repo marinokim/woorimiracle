@@ -73,5 +73,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764149963396",
+        "name": "프랑드 다이어리",
+        "category": "Diary Case",
+        "price": 10000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764149951452.png",
+        "detailImage": "assets/images/product/detail_1764149958435.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
