@@ -103,5 +103,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764150244264",
+        "name": "장르 다이어리",
+        "category": "Diary Case",
+        "price": 11000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764150231075.png",
+        "detailImage": "assets/images/product/detail_1764150239212.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
