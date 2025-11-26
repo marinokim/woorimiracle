@@ -148,5 +148,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764150365423",
+        "name": "헌트 다이어리",
+        "category": "Diary Case",
+        "price": 10000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764150351407.jpg",
+        "detailImage": "assets/images/product/detail_1764150360515.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
