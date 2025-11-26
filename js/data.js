@@ -136,11 +136,17 @@ const migratePaths = (list) => {
             p.image = p.image.replace('assets/images/', 'assets/images/product/');
         }
 
-        // Same for detailImage
+        // Same for detailImage - handle all formats
+        if (p.detailImage && p.detailImage.startsWith('assets/images/product_')) {
+            p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/product/');
+        }
         if (p.detailImage && p.detailImage.startsWith('assets/images/detail_')) {
             p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/product/');
         }
         if (p.detailImage && p.detailImage.match(/^assets\/images\/detail\d+_/)) {
+            p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/product/');
+        }
+        if (p.detailImage && p.detailImage.match(/^assets\/images\/product\d+_/)) {
             p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/product/');
         }
 
