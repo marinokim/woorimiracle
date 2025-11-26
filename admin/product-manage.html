@@ -328,7 +328,7 @@
                     const timestamp = Date.now();
                     const extension = file.name.split('.').pop();
                     const filename = `${prefix}${timestamp}.${extension}`;
-                    const path = `assets/images/${filename}`;
+                    const path = `assets/images/products/${filename}`;
 
                     await githubManager.uploadFile(file, path, `Add product image: ${filename}`);
 
@@ -364,7 +364,7 @@
 
                 if (product && githubManager.isConfigured()) {
                     // Delete main image if it exists and is a GitHub path
-                    if (product.image && product.image.startsWith('assets/images/')) {
+                    if (product.image && product.image.startsWith('assets/images/products/')) {
                         try {
                             await githubManager.deleteFile(product.image, `Delete product image: ${product.image}`);
                             console.log('Main image deleted from GitHub');
@@ -374,7 +374,7 @@
                     }
 
                     // Delete detail image if it exists and is a GitHub path
-                    if (product.detailImage && product.detailImage.startsWith('assets/images/')) {
+                    if (product.detailImage && product.detailImage.startsWith('assets/images/products/')) {
                         try {
                             await githubManager.deleteFile(product.detailImage, `Delete detail image: ${product.detailImage}`);
                             console.log('Detail image deleted from GitHub');
