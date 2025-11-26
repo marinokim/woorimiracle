@@ -469,4 +469,32 @@ footer h4 {
     .product-price {
         font-size: 1rem !important;
     }
+
+    /* Product Detail Page Mobile */
+    .product-detail-container {
+        flex-direction: column !important;
+        gap: 30px !important;
+    }
+
+    .product-detail-image {
+        width: 100% !important;
+        order: 1;
+    }
+
+    .product-detail-image>div {
+        height: 300px !important;
+    }
+
+    .product-detail-info {
+        width: 100% !important;
+        order: 2;
+    }
+
+    .product-detail-info h1 {
+        font-size: 1.5rem !important;
+    }
+
+    .product-detail-info #product-price {
+        font-size: 1.5rem !important;
+    }
 }
