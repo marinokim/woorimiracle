@@ -58,5 +58,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764149930050",
+        "name": "(Z-FOLD)Z로체 다이어리",
+        "category": "Diary Case",
+        "price": 10000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764149915633.jpg",
+        "detailImage": "assets/images/product/detail_1764149924992.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
