@@ -133,5 +133,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764150326391",
+        "name": "벨로체 다이어리",
+        "category": "Diary Case",
+        "price": 13000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764150314899.jpg",
+        "detailImage": "assets/images/product/detail_1764150321716.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
