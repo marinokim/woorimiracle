@@ -174,7 +174,11 @@
                         style="max-width: 200px; margin-top: 10px; display: none; border-radius: 4px; border: 1px solid #ddd;">
                 </div>
                 <div class="form-group">
-                    <label>Detail Image</label>
+                    <label>Detail Image
+                        <button type="button" onclick="openGithubSettings()"
+                            style="font-size: 0.8rem; padding: 2px 8px; margin-left: 10px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">⚙️
+                            GitHub 설정</button>
+                    </label>
                     <input type="file" id="p-detail-image-file" accept="image/*">
                     <input type="hidden" id="p-detail-image">
                     <img id="p-detail-image-preview"
@@ -294,7 +298,7 @@
         };
 
         // File Upload Handlers - GitHub API
-        const handleFileUpload = (fileInputId, hiddenInputId, previewId) => {
+        const handleFileUpload = (fileInputId, hiddenInputId, previewId, prefix = 'product_') => {
             document.getElementById(fileInputId).addEventListener('change', async (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -323,7 +327,7 @@
 
                     const timestamp = Date.now();
                     const extension = file.name.split('.').pop();
-                    const filename = `product_${timestamp}.${extension}`;
+                    const filename = `${prefix}${timestamp}.${extension}`;
                     const path = `assets/images/${filename}`;
 
                     await githubManager.uploadFile(file, path, `Add product image: ${filename}`);
@@ -346,8 +350,8 @@
 
 
 
-        handleFileUpload('p-image-file', 'p-image', 'p-image-preview');
-        handleFileUpload('p-detail-image-file', 'p-detail-image', 'p-detail-image-preview');
+        handleFileUpload('p-image-file', 'p-image', 'p-image-preview', 'product_');
+        handleFileUpload('p-detail-image-file', 'p-detail-image', 'p-detail-image-preview', 'detail_');
 
         const deleteProduct = (id) => {
             if (confirm('Are you sure?')) {
