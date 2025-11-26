@@ -178,5 +178,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764150453459",
+        "name": "레전드 지갑 다이어리",
+        "category": "Diary Case",
+        "price": 15000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764150440961.jpg",
+        "detailImage": "assets/images/product/detail_1764150448404.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
