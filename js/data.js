@@ -117,69 +117,43 @@ var categories = [
     { id: 'acc', name: '악세사리' }
 ];
 
-// Initialize Data from LocalStorage
-// Version check - force reset if data structure changed
-const DATA_VERSION = '1.1'; // Increment this to force reset
-const currentVersion = localStorage.getItem('wm_data_version');
-if (currentVersion !== DATA_VERSION) {
-    localStorage.removeItem('wm_products');
-    localStorage.setItem('wm_data_version', DATA_VERSION);
-}
-
-// Load products from localStorage or defaults
-var products = JSON.parse(localStorage.getItem('wm_products')) || defaultProducts;
-
-// Migrate old image paths to new folder (assets/images/product/)
-const migratePaths = (list) => {
-    return list.map(p => {
-        // Handle old format: assets/images/product_*.jpg -> assets/images/product/product_*.jpg
-        if (p.image && p.image.startsWith('assets/images/product_')) {
-            p.image = p.image.replace('assets/images/', 'assets/images/product/');
-        }
-        if (p.image && p.image.startsWith('assets/images/detail_')) {
-            p.image = p.image.replace('assets/images/', 'assets/images/product/');
-        }
-        // Handle old format: assets/images/product01_*.jpg -> assets/images/product/product01_*.jpg
-        if (p.image && p.image.match(/^assets\/images\/product\d+_/)) {
-            p.image = p.image.replace('assets/images/', 'assets/images/product/');
-        }
-
-        // Same for detailImage - handle all formats
-        if (p.detailImage && p.detailImage.startsWith('assets/images/product_')) {
-            p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/product/');
-        }
-        if (p.detailImage && p.detailImage.startsWith('assets/images/detail_')) {
-            p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/product/');
-        }
-        if (p.detailImage && p.detailImage.match(/^assets\/images\/detail\d+_/)) {
-            p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/product/');
-        }
-        if (p.detailImage && p.detailImage.match(/^assets\/images\/product\d+_/)) {
-            p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/product/');
-        }
-
-        return p;
-    });
-};
-products = migratePaths(products);
-// Save migrated paths back to localStorage
-localStorage.setItem('wm_products', JSON.stringify(products));
-
-// Load notices from localStorage or defaults
+// Initialize Data
+// Try to load from GitHub JSON first, fallback to LocalStorage/Default
+var products = [];
 var notices = JSON.parse(localStorage.getItem('wm_notices')) || defaultNotices;
 
-// Save defaults if empty (first run)
-if (!localStorage.getItem('wm_products')) {
-    localStorage.setItem('wm_products', JSON.stringify(defaultProducts));
-}
-if (!localStorage.getItem('wm_notices')) {
-    localStorage.setItem('wm_notices', JSON.stringify(defaultNotices));
-}
+const loadProducts = async () => {
+    try {
+        // Fetch from server (cache busting to get latest)
+        const response = await fetch(`data/products.json?v=${Date.now()}`);
+        if (!response.ok) throw new Error('Failed to load product data');
+
+        products = await response.json();
+        console.log('Loaded products from server:', products.length);
+
+        // Update global variable and trigger any necessary UI updates
+        if (typeof window !== 'undefined') {
+            window.products = products;
+            // Dispatch event to notify that data is ready
+            window.dispatchEvent(new CustomEvent('productsLoaded'));
+        }
+    } catch (error) {
+        console.warn('Server data load failed, falling back to local:', error);
+        // Fallback to LocalStorage or Default
+        products = JSON.parse(localStorage.getItem('wm_products')) || defaultProducts;
+        if (typeof window !== 'undefined') {
+            window.products = products;
+            window.dispatchEvent(new CustomEvent('productsLoaded'));
+        }
+    }
+};
+
+// Start loading immediately
+loadProducts();
 
 // Export for global usage
 if (typeof window !== 'undefined') {
-    window.products = products;
+    window.products = products; // Initial empty/default state
     window.notices = notices;
     window.categories = categories;
 }
-console.log('Data loaded:', products.length, 'products,', notices.length, 'notices');

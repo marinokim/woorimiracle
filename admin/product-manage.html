@@ -386,6 +386,24 @@
 
                 // Delete product from localStorage
                 adminProducts.delete(id);
+
+                // Sync with GitHub JSON
+                if (githubManager.isConfigured()) {
+                    try {
+                        const currentProducts = adminProducts.getAll();
+                        const jsonContent = JSON.stringify(currentProducts, null, 4);
+                        const blob = new Blob([jsonContent], { type: 'application/json' });
+                        // Create a File object from Blob to reuse uploadFile method
+                        const file = new File([blob], 'products.json', { type: 'application/json' });
+
+                        await githubManager.uploadFile(file, 'data/products.json', `Delete product: ${id}`);
+                        console.log('Synced products.json to GitHub');
+                    } catch (err) {
+                        console.error('Failed to sync products.json:', err);
+                        alert('GitHub 데이터 동기화 실패 (로컬 삭제는 완료됨)');
+                    }
+                }
+
                 renderList();
                 alert('제품이 삭제되었습니다.');
 
@@ -395,28 +413,61 @@
             }
         };
 
-        document.getElementById('product-form').addEventListener('submit', (e) => {
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const id = document.getElementById('p-id').value;
-            const product = {
-                id: id || 'p' + Date.now(),
-                name: document.getElementById('p-name').value,
-                category: document.getElementById('p-category').value,
-                price: Number(document.getElementById('p-price').value),
-                moq: Number(document.getElementById('p-moq').value),
-                image: document.getElementById('p-image').value,
-                detailImage: document.getElementById('p-detail-image').value,
-                description: document.getElementById('p-desc').value,
-                specs: { compatible: ['All Models'] } // Default specs
-            };
 
-            if (id) {
-                adminProducts.update(id, product);
-            } else {
-                adminProducts.add(product);
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Saving...';
+
+            try {
+                const id = document.getElementById('p-id').value;
+                const product = {
+                    id: id || 'p' + Date.now(),
+                    name: document.getElementById('p-name').value,
+                    category: document.getElementById('p-category').value,
+                    price: Number(document.getElementById('p-price').value),
+                    moq: Number(document.getElementById('p-moq').value),
+                    image: document.getElementById('p-image').value,
+                    detailImage: document.getElementById('p-detail-image').value,
+                    description: document.getElementById('p-desc').value,
+                    specs: { compatible: ['All Models'] } // Default specs
+                };
+
+                if (id) {
+                    adminProducts.update(id, product);
+                } else {
+                    adminProducts.add(product);
+                }
+
+                // Sync with GitHub JSON
+                if (githubManager.isConfigured()) {
+                    try {
+                        const currentProducts = adminProducts.getAll();
+                        const jsonContent = JSON.stringify(currentProducts, null, 4);
+                        const blob = new Blob([jsonContent], { type: 'application/json' });
+                        const file = new File([blob], 'products.json', { type: 'application/json' });
+
+                        await githubManager.uploadFile(file, 'data/products.json', id ? `Update product: ${product.name}` : `Add product: ${product.name}`);
+                        console.log('Synced products.json to GitHub');
+                    } catch (err) {
+                        console.error('Failed to sync products.json:', err);
+                        alert('GitHub 데이터 동기화 실패 (로컬 저장은 완료됨)');
+                    }
+                }
+
+                closeModal();
+                renderList();
+                alert('제품이 저장되었습니다.');
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('저장 중 오류가 발생했습니다: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalText;
             }
-            closeModal();
-            renderList();
         });
 
         // Initialize
