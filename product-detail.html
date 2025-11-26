@@ -80,36 +80,59 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
-        let product = null;
 
-        if (typeof products !== 'undefined') {
-            product = products.find(p => p.id === productId) || products[0];
-        }
+        const renderProductDetail = () => {
+            if (typeof products === 'undefined' || products.length === 0) return;
 
-        if (product) {
-            document.title = `${product.name} - Woori Miracle`;
-            document.getElementById('main-image').src = product.image;
-            document.getElementById('product-category').innerText = product.category;
-            document.getElementById('product-name').innerText = product.name;
-            document.getElementById('product-price').innerText = `₩${product.price.toLocaleString()}`;
-            document.getElementById('product-moq').innerText = `${product.moq}개`;
-            document.getElementById('product-description').innerText = product.description;
+            const product = products.find(p => p.id === productId) || products[0];
 
-            // Show detail image if available
-            if (product.detailImage) {
-                const detailContainer = document.createElement('div');
-                detailContainer.style.marginTop = '40px';
-                detailContainer.style.textAlign = 'center';
-                detailContainer.innerHTML = `<img src="${product.detailImage}" alt="Detail Info" style="max-width: 100%; box-shadow: var(--shadow-sm); margin: 0 auto;" loading="lazy">`;
-                document.querySelector('main').appendChild(detailContainer);
+            if (product) {
+                document.title = `${product.name} - Woori Miracle`;
+                document.getElementById('main-image').src = product.image;
+                document.getElementById('product-category').innerText = product.category;
+                document.getElementById('product-name').innerText = product.name;
+                document.getElementById('product-price').innerText = `₩${product.price.toLocaleString()}`;
+                document.getElementById('product-moq').innerText = `${product.moq}개`;
+                document.getElementById('product-description').innerText = product.description;
+
+                // Show detail image if available
+                const existingDetail = document.getElementById('detail-image-container');
+                if (existingDetail) existingDetail.remove(); // Avoid duplicates on re-render
+
+                if (product.detailImage) {
+                    const detailContainer = document.createElement('div');
+                    detailContainer.id = 'detail-image-container';
+                    detailContainer.style.marginTop = '40px';
+                    detailContainer.style.textAlign = 'center';
+                    detailContainer.innerHTML = `<img src="${product.detailImage}" alt="Detail Info" style="max-width: 100%; box-shadow: var(--shadow-sm); margin: 0 auto;" loading="lazy">`;
+                    document.getElementById('product-description').appendChild(detailContainer);
+                }
             }
-        }
+        };
+
+        // Initial render attempt
+        renderProductDetail();
+
+        // Listen for async data load
+        window.addEventListener('productsLoaded', () => {
+            console.log('Products loaded event received');
+            renderProductDetail();
+        });
 
         window.addToCart = () => {
+            if (typeof products === 'undefined') return;
+            const product = products.find(p => p.id === productId) || products[0];
             if (!product) return;
-            const quantity = parseInt(document.querySelector('input[type="number"]').value);
-            cart.add(product, quantity);
-            alert('장바구니에 담겼습니다.');
+
+            const quantityInput = document.querySelector('input[type="number"]');
+            const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+
+            if (typeof cart !== 'undefined') {
+                cart.add(product, quantity);
+                alert('장바구니에 담겼습니다.');
+            } else {
+                console.error('Cart module not loaded');
+            }
         };
     </script>
 </body>

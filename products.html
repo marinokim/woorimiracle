@@ -95,6 +95,12 @@
 
         renderProducts();
 
+        // Listen for async data load
+        window.addEventListener('productsLoaded', () => {
+            console.log('Products loaded event received');
+            renderProducts();
+        });
+
         // Category Click Handler
         categoryList.addEventListener('click', (e) => {
             if (e.target.classList.contains('category-link')) {
