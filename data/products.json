@@ -403,5 +403,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764151170728",
+        "name": "다용도 라인 나비 지갑 다이어리",
+        "category": "Diary Case",
+        "price": 18000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764151155114.jpg",
+        "detailImage": "assets/images/product/detail_1764151163527.jpeg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
