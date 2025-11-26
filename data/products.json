@@ -1,1 +1,17 @@
-[]
+[
+    {
+        "id": "p1764147387580",
+        "name": "클로턴 다이어리 (Cloton Diary)",
+        "category": "Diary Case",
+        "price": 12000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764147372261.jpg",
+        "detailImage": "assets/images/product/detail_1764147380916.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
+    }
+]
