@@ -118,6 +118,14 @@ var categories = [
 ];
 
 // Initialize Data from LocalStorage
+// Version check - force reset if data structure changed
+const DATA_VERSION = '1.1'; // Increment this to force reset
+const currentVersion = localStorage.getItem('wm_data_version');
+if (currentVersion !== DATA_VERSION) {
+    localStorage.removeItem('wm_products');
+    localStorage.setItem('wm_data_version', DATA_VERSION);
+}
+
 // Load products from localStorage or defaults
 var products = JSON.parse(localStorage.getItem('wm_products')) || defaultProducts;
 
