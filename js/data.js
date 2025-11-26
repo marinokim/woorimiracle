@@ -118,7 +118,26 @@ var categories = [
 ];
 
 // Initialize Data from LocalStorage
+// Load products from localStorage or defaults
 var products = JSON.parse(localStorage.getItem('wm_products')) || defaultProducts;
+
+// Migrate old image paths (assets/images/) to new folder (assets/images/products/)
+const migratePaths = (list) => {
+    return list.map(p => {
+        if (p.image && p.image.startsWith('assets/images/') && !p.image.startsWith('assets/images/products/')) {
+            p.image = p.image.replace('assets/images/', 'assets/images/products/');
+        }
+        if (p.detailImage && p.detailImage.startsWith('assets/images/') && !p.detailImage.startsWith('assets/images/products/')) {
+            p.detailImage = p.detailImage.replace('assets/images/', 'assets/images/products/');
+        }
+        return p;
+    });
+};
+products = migratePaths(products);
+// Save migrated paths back to localStorage
+localStorage.setItem('wm_products', JSON.stringify(products));
+
+// Load notices from localStorage or defaults
 var notices = JSON.parse(localStorage.getItem('wm_notices')) || defaultNotices;
 
 // Save defaults if empty (first run)
