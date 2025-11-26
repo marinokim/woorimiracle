@@ -14,9 +14,9 @@
 <body>
     <header></header>
 
-    <main class="container" style="padding: 60px 24px; display: flex; gap: 60px;">
+    <main class="container products-page-container" style="padding: 60px 24px;">
         <!-- Sidebar -->
-        <aside style="width: 220px; flex-shrink: 0;">
+        <aside class="products-sidebar" style="width: 220px; flex-shrink: 0;">
             <h3
                 style="margin-bottom: 24px; font-size: 1.2rem; padding-bottom: 15px; border-bottom: 2px solid var(--primary-color);">
                 Categories</h3>
@@ -26,7 +26,7 @@
         </aside>
 
         <!-- Product Grid -->
-        <section style="flex: 1;">
+        <section class="products-content" style="flex: 1;">
             <div class="flex justify-between items-center" style="margin-bottom: 40px;">
                 <h2 id="category-title" style="margin: 0;">All Products</h2>
                 <select
@@ -36,7 +36,7 @@
                     <option>높은가격순</option>
                 </select>
             </div>
-            <div id="product-grid"
+            <div id="product-grid" class="products-grid"
                 style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px;">
                 <!-- Products injected by JS -->
             </div>

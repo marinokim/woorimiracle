@@ -305,6 +305,7 @@ footer h4 {
     font-weight: 600;
     margin-top: 8px;
 }
+
 /* Mobile Menu Styles */
 .mobile-menu-btn {
     display: none;
@@ -339,6 +340,12 @@ footer h4 {
     display: flex;
 }
 
+/* Products Page Desktop Layout */
+.products-page-container {
+    display: flex;
+    gap: 60px;
+}
+
 @media (max-width: 768px) {
     .mobile-menu-btn {
         display: flex;
@@ -357,7 +364,7 @@ footer h4 {
         flex-direction: column;
         align-items: center;
         padding: 20px 0;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         display: none;
         border-top: 1px solid #eee;
     }
@@ -396,5 +403,70 @@ footer h4 {
     .mobile-auth-actions .btn {
         width: 80%;
         max-width: 200px;
+    }
+
+    /* Products Page Mobile */
+    .products-page-container {
+        flex-direction: column !important;
+        gap: 30px !important;
+        padding: 30px 16px !important;
+    }
+
+    .products-sidebar {
+        width: 100% !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .products-sidebar h3 {
+        font-size: 1rem !important;
+    }
+
+    .products-sidebar ul {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .products-sidebar li {
+        margin-bottom: 0 !important;
+        flex-shrink: 0;
+    }
+
+    .products-sidebar .category-link {
+        white-space: nowrap;
+        padding: 8px 16px !important;
+        font-size: 0.9rem;
+    }
+
+    .products-content {
+        width: 100%;
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+
+    .product-card {
+        font-size: 0.9rem;
+    }
+
+    .product-image {
+        height: 180px !important;
+    }
+
+    .product-info {
+        padding: 12px 8px !important;
+    }
+
+    .product-title {
+        font-size: 0.85rem !important;
+    }
+
+    .product-price {
+        font-size: 1rem !important;
     }
 }
