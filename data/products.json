@@ -388,5 +388,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764151133364",
+        "name": "다용도 펄 블라썸 지갑 다이어리",
+        "category": "Diary Case",
+        "price": 20000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764151119784.png",
+        "detailImage": "assets/images/product/detail_1764151128486.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
