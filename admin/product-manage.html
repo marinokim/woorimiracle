@@ -324,7 +324,7 @@
                     const timestamp = Date.now();
                     const extension = file.name.split('.').pop();
                     const filename = `product_${timestamp}.${extension}`;
-                    const path = `assets/images/products/${filename}`;
+                    const path = `assets/images/${filename}`;
 
                     await githubManager.uploadFile(file, path, `Add product image: ${filename}`);
 
@@ -344,10 +344,7 @@
             });
         };
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            updateGithubStatus();
-        });
+
 
         handleFileUpload('p-image-file', 'p-image', 'p-image-preview');
         handleFileUpload('p-detail-image-file', 'p-detail-image', 'p-detail-image-preview');
@@ -381,6 +378,11 @@
             }
             closeModal();
             renderList();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateGithubStatus();
         });
 
         renderList();
