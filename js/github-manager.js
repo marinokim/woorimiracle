@@ -102,5 +102,57 @@ const githubManager = {
             console.error('GitHub Upload Error:', error);
             throw error;
         }
+    },
+
+    // Delete file from GitHub
+    async deleteFile(path, message = 'Delete file via Admin') {
+        if (!this.isConfigured()) {
+            throw new Error('GitHub Token is not configured.');
+        }
+
+        try {
+            const url = `https://api.github.com/repos/${this.config.owner}/${this.config.repo}/contents/${path}`;
+
+            // Get file SHA (required for deletion)
+            const checkResponse = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${this.config.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+
+            if (!checkResponse.ok) {
+                throw new Error('File not found in repository');
+            }
+
+            const data = await checkResponse.json();
+            const sha = data.sha;
+
+            // Delete file
+            const deleteResponse = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `token ${this.config.token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({
+                    message: message,
+                    sha: sha,
+                    branch: this.config.branch
+                })
+            });
+
+            if (!deleteResponse.ok) {
+                const errorData = await deleteResponse.json();
+                throw new Error(errorData.message || 'Delete failed');
+            }
+
+            return true;
+
+        } catch (error) {
+            console.error('GitHub Delete Error:', error);
+            throw error;
+        }
     }
 };

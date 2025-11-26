@@ -353,10 +353,45 @@
         handleFileUpload('p-image-file', 'p-image', 'p-image-preview', 'product_');
         handleFileUpload('p-detail-image-file', 'p-detail-image', 'p-detail-image-preview', 'detail_');
 
-        const deleteProduct = (id) => {
-            if (confirm('Are you sure?')) {
+        const deleteProduct = async (id) => {
+            if (!confirm('정말 삭제하시겠습니까? 제품과 관련 이미지가 GitHub에서도 삭제됩니다.')) {
+                return;
+            }
+
+            try {
+                // Get product data to find image paths
+                const product = adminProducts.getAll().find(p => p.id === id);
+
+                if (product && githubManager.isConfigured()) {
+                    // Delete main image if it exists and is a GitHub path
+                    if (product.image && product.image.startsWith('assets/images/')) {
+                        try {
+                            await githubManager.deleteFile(product.image, `Delete product image: ${product.image}`);
+                            console.log('Main image deleted from GitHub');
+                        } catch (error) {
+                            console.warn('Failed to delete main image:', error);
+                        }
+                    }
+
+                    // Delete detail image if it exists and is a GitHub path
+                    if (product.detailImage && product.detailImage.startsWith('assets/images/')) {
+                        try {
+                            await githubManager.deleteFile(product.detailImage, `Delete detail image: ${product.detailImage}`);
+                            console.log('Detail image deleted from GitHub');
+                        } catch (error) {
+                            console.warn('Failed to delete detail image:', error);
+                        }
+                    }
+                }
+
+                // Delete product from localStorage
                 adminProducts.delete(id);
                 renderList();
+                alert('제품이 삭제되었습니다.');
+
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('삭제 중 오류가 발생했습니다: ' + error.message);
             }
         };
 
