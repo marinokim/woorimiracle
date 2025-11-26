@@ -298,5 +298,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764150786319",
+        "name": "헤라클래식 다이어리",
+        "category": "Diary Case",
+        "price": 16500,
+        "moq": 10,
+        "image": "assets/images/product/product_1764150773836.jpg",
+        "detailImage": "assets/images/product/detail_1764150782533.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
