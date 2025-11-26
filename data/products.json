@@ -223,5 +223,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764150568893",
+        "name": "피에르 가죽 다이어리",
+        "category": "Diary Case",
+        "price": 12000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764150550771.jpg",
+        "detailImage": "assets/images/product/detail_1764150563744.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
