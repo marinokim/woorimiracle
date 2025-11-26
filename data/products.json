@@ -283,5 +283,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764150750980",
+        "name": "크렉스 다이어리",
+        "category": "Diary Case",
+        "price": 19000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764150736708.jpg",
+        "detailImage": "assets/images/product/detail_1764150745514.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
