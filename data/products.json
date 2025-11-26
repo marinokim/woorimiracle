@@ -28,5 +28,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764149841564",
+        "name": "크롯엣지 가죽 다이어리",
+        "category": "Diary Case",
+        "price": 10000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764149826303.png",
+        "detailImage": "assets/images/product/detail_1764149837028.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
