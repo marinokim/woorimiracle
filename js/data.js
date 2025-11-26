@@ -5,8 +5,8 @@ var defaultProducts = [
         category: 'Diary Case',
         price: 15000,
         moq: 10,
-        image: 'assets/images/product01_01.jpg',
-        detailImage: 'assets/images/detail_01.jpg',
+        image: 'assets/images/products/product01_01.jpg',
+        detailImage: 'assets/images/products/detail_01.jpg',
         description: '고급스러운 가죽 질감과 실용적인 카드 수납 기능을 갖춘 다이어리 케이스입니다. 스탠드 기능으로 영상 시청이 편리하며, TPU 내부 케이스로 기기를 안전하게 보호합니다.',
         specs: {
             material: 'PU Leather, TPU',
@@ -21,8 +21,8 @@ var defaultProducts = [
         category: 'Diary Case',
         price: 16000,
         moq: 10,
-        image: 'assets/images/product01_02.jpg',
-        detailImage: 'assets/images/detail_02.jpg',
+        image: 'assets/images/products/product01_02.jpg',
+        detailImage: 'assets/images/products/detail_02.jpg',
         description: '세련된 디자인과 실용성을 겸비한 듀넬 다이어리입니다. 슬림한 핏감과 우수한 그립감을 제공합니다.',
         specs: {
             material: 'PU Leather',
@@ -36,7 +36,7 @@ var defaultProducts = [
         category: 'Diary Case',
         price: 18000,
         moq: 10,
-        image: 'assets/images/product01_03.jpg',
+        image: 'assets/images/products/product01_03.jpg',
         description: '악어 가죽 패턴의 고급스러운 질감이 돋보이는 제품입니다. 프리미엄 라인업으로 선물용으로도 좋습니다.',
         specs: {
             material: 'PU Leather (Croc Pattern)',
@@ -50,7 +50,7 @@ var defaultProducts = [
         category: 'Diary Case',
         price: 12000,
         moq: 20,
-        image: 'assets/images/product01_04.jpg',
+        image: 'assets/images/products/product01_04.jpg',
         description: '사피아노 재질로 스크래치에 강하며 카드 수납이 편리합니다. 심플하고 모던한 디자인이 특징입니다.',
         specs: {
             material: 'Saffiano PU',
@@ -64,7 +64,7 @@ var defaultProducts = [
         category: 'Diary Case',
         price: 14000,
         moq: 10,
-        image: 'assets/images/product01_05.jpg',
+        image: 'assets/images/products/product01_05.jpg',
         description: '심플한 디자인에 나비 문양이 포인트인 베이직 다이어리입니다. 여성 고객들에게 인기가 많습니다.',
         specs: {
             material: 'PU Leather',
@@ -78,7 +78,7 @@ var defaultProducts = [
         category: 'Diary Case',
         price: 20000,
         moq: 5,
-        image: 'assets/images/product01_06.jpg',
+        image: 'assets/images/products/product01_06.jpg',
         description: '지갑 대용으로 사용 가능한 넉넉한 수납공간을 자랑합니다. 화려한 펄감이 돋보이는 제품입니다.',
         specs: {
             material: 'Pearl PU',
@@ -92,7 +92,7 @@ var defaultProducts = [
         category: 'Diary Case',
         price: 19000,
         moq: 5,
-        image: 'assets/images/product01_07.jpg',
+        image: 'assets/images/products/product01_07.jpg',
         description: '우아한 나비 패턴과 라인 장식이 어우러진 지갑형 케이스입니다.',
         specs: {
             material: 'PU Leather',
