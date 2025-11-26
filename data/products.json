@@ -88,5 +88,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764150209477",
+        "name": "프넬 다이어리",
+        "category": "Diary Case",
+        "price": 10000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764150195441.jpg",
+        "detailImage": "assets/images/product/detail_1764150204340.jpg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
