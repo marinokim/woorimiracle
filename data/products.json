@@ -358,5 +358,20 @@
                 "All Models"
             ]
         }
+    },
+    {
+        "id": "p1764151058693",
+        "name": "사피아노A 시크릿 카드포켓 다이어리",
+        "category": "Diary Case",
+        "price": 20000,
+        "moq": 10,
+        "image": "assets/images/product/product_1764151042626.jpg",
+        "detailImage": "assets/images/product/detail_1764151051757.jpeg",
+        "description": "",
+        "specs": {
+            "compatible": [
+                "All Models"
+            ]
+        }
     }
 ]
